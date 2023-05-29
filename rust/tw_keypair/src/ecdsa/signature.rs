@@ -88,6 +88,11 @@ impl<C: EcdsaCurve> Signature<C> {
         dest
     }
 
+    // Serialize this signature as ASN.1 DER.
+    pub fn to_der(&self) -> ecdsa::der::Signature<C> {
+        self.signature.to_der()
+    }
+
     /// # Panic
     ///
     /// `r` and `s` must be 32 byte arrays, otherwise the function panics.

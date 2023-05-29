@@ -14,7 +14,7 @@ tw_memory = { path = "../tw_memory" }
 tw_misc = { path = "../tw_misc" }
 zeroize = "1.6.0"
 # ECDSA specific:
-ecdsa = "0.16.6"
+ecdsa = { version = "0.16.6", features = ["der"] }
 k256 = { version = "0.13.0", features = ["ecdh", "ecdsa", "schnorr", "std"], default-features = false }
 p256 = { version = "0.13.0", features = ["ecdsa", "std"], default-features = false }
 rfc6979 = "0.4.0"
