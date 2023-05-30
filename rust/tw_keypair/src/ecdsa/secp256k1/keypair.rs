@@ -9,7 +9,7 @@ use crate::ecdsa::secp256k1::public::PublicKey;
 use crate::ecdsa::secp256k1::{Signature, VerifySignature};
 use crate::traits::{KeyPairTrait, SigningKeyTrait, VerifyingKeyTrait};
 use crate::{KeyPairError, KeyPairResult};
-use tw_encoding::hex;
+use tw_encoding::{hex, base58::{self, Alphabet}};
 use tw_hash::H256;
 use zeroize::Zeroizing;
 
@@ -17,6 +17,20 @@ use zeroize::Zeroizing;
 pub struct KeyPair {
     private: PrivateKey,
     public: PublicKey,
+}
+
+impl KeyPair {
+    // TODO: Should probably add option to pass on the Alphabet. Maybe check
+    // checksum, too?
+    pub fn from_wif(wif: &str) -> KeyPairResult<Self> {
+        let data = base58::decode(wif, Alphabet::BITCOIN)
+            .map_err(|_| KeyPairError::InvalidSecretKey)?;
+
+        // First byte is network indicator, followed by the actualy private key
+        // of 32 bytes. Additionally, there might be an optional byte indicating
+        // whether its compressed or uncompressed, followed by the checksum.
+        KeyPair::try_from(data[1..33].as_ref())
+    }
 }
 
 impl KeyPairTrait for KeyPair {
