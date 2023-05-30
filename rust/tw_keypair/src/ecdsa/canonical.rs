@@ -30,7 +30,7 @@ use tw_hash::H256;
 type CurveDigest<C> = <C as DigestPrimitive>::Digest;
 
 /// Implements https://github.com/trustwallet/wallet-core/blob/d9e35ec485b1366dd10509192d02d9dbb6877ab3/src/PrivateKey.cpp#L253-L282
-pub(crate) fn sign_with_canonical<C: EcdsaCurve, F>(
+pub fn sign_with_canonical<C: EcdsaCurve, F>(
     signing_key: &SigningKey<C>,
     hash_to_sign: H256,
     mut is_canonical: F,
