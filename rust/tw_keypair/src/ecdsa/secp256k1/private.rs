@@ -10,6 +10,7 @@ use crate::traits::SigningKeyTrait;
 use crate::{KeyPairError, KeyPairResult};
 use k256::ecdsa::{SigningKey, VerifyingKey};
 use k256::elliptic_curve::sec1::ToEncodedPoint;
+use k256::schnorr::{self, signature::Signer};
 use k256::{AffinePoint, ProjectivePoint};
 use tw_encoding::hex;
 use tw_hash::H256;
@@ -25,6 +26,15 @@ impl PrivateKey {
     /// Returns an associated `secp256k1` public key.
     pub fn public(&self) -> PublicKey {
         PublicKey::new(*self.secret.verifying_key())
+    }
+
+    /// Signs the given `hash` and computes a Taproot Schnorr signature as defined in
+    /// [BIP340](https://github.com/bitcoin/bips/blob/master/bip-0340.mediawiki)
+    /// using the private key.
+    pub fn sign_schnorr_bip340(&self, message: H256) -> schnorr::Signature {
+        let &scalar = self.secret.as_nonzero_scalar();
+        let signer = schnorr::SigningKey::from(scalar);
+        signer.sign(message.as_slice())
     }
 
     /// Computes an EC Diffie-Hellman secret in constant time.
