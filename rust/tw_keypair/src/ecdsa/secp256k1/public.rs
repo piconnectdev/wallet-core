@@ -9,6 +9,8 @@ use crate::traits::VerifyingKeyTrait;
 use crate::{KeyPairError, KeyPairResult};
 use k256::ecdsa::signature::hazmat::PrehashVerifier;
 use k256::ecdsa::VerifyingKey;
+use k256::elliptic_curve;
+use k256::schnorr;
 use tw_encoding::hex;
 use tw_hash::{H256, H264, H520};
 use tw_misc::traits::ToBytesVec;
@@ -49,6 +51,13 @@ impl PublicKey {
         let compressed = false;
         H520::try_from(self.public.to_encoded_point(compressed).as_bytes())
             .expect("Expected 65 byte array Public Key")
+    }
+
+    // TODO
+    pub fn to_schnorr_pubkey_bip340(&self) -> schnorr::VerifyingKey {
+        let &affine_point = self.public.as_affine();
+        let pubkey = elliptic_curve::PublicKey::from_affine(affine_point).unwrap();
+        schnorr::VerifyingKey::try_from(pubkey).unwrap()
     }
 }
 
