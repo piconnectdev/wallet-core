@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use bitcoin::hashes::Hash;
 use bitcoin::{
     OutPoint as BOutPoint, ScriptBuf as BScriptBuf, Sequence as BSequence, Txid as BTxid,
@@ -50,8 +52,8 @@ fn tx_input_p2pkh_from_slice() {
         // Expected recipient.
         assert_eq!(
             p2pkh.recipient,
-            PubkeyHash::from_bytes(hex::decode(recipient_hash).unwrap().try_into().unwrap())
-                .unwrap()
+            //pubkey_hash_from_string(recipient_hash).unwrap()
+            PubkeyHash::from_str(recipient_hash).unwrap(),
         );
     }
 
