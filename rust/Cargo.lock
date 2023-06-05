@@ -1220,6 +1220,7 @@ version = "0.1.0"
 dependencies = [
  "bitcoin",
  "secp256k1",
+ "serde_json",
  "tw_encoding",
 ]
 
