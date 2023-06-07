@@ -1219,6 +1219,7 @@ name = "tw_bitcoin"
 version = "0.1.0"
 dependencies = [
  "bitcoin",
+ "hex",
  "secp256k1",
  "serde",
  "serde_json",
